@@ -1,0 +1,66 @@
+# Python
+*.pyc
+__pycache__/
+*.pyd
+*.pyo
+*.egg-info/
+.Python
+build/
+dist/
+develop-eggs/
+sdist/
+var/
+pip-log.txt
+pip-delete-this-arg
+.tox/
+.coverage
+.cache/
+.pytest_cache/
+.mypy_cache/
+.vscode/
+
+# Django specific
+*.log
+*.pot
+*.mo
+*.po
+db.sqlite3
+media/
+static/
+local_settings.py
+.DS_Store
+*.seed
+/htmlcov/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+logs/
+celerybeat-schedule
+celeryd.log
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*~
+._*
+.project
+.pydevproject
+.settings/
+.history
+target/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Other common files
+*.sublime-project
+*.sublime-workspace
+.babel-cache
+.sass-cache
+npm-debug.log
+yarn-error.log
