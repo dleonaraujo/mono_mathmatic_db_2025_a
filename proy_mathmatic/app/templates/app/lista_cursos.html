@@ -1,0 +1,185 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Cursos - Academia de Matemática{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <h1 class="fw-bold">
+                <i class="fas fa-book text-primary me-3"></i>
+                Nuestros Cursos
+            </h1>
+            <p class="text-muted">Explora nuestra amplia variedad de cursos de matemática</p>
+        </div>
+        <div class="col-lg-4">
+            <!-- Search Form -->
+            <form method="GET" class="d-flex">
+                <input type="text" 
+                       class="form-control" 
+                       name="search" 
+                       placeholder="Buscar cursos o profesores..." 
+                       value="{{ search_query }}">
+                <button class="btn btn-outline-primary ms-2" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {% if search_query %}
+    <div class="alert alert-info">
+        <i class="fas fa-search me-2"></i>
+        Resultados para: <strong>"{{ search_query }}"</strong>
+        <a href="{% url 'lista_cursos' %}" class="btn btn-sm btn-outline-info ms-2">Limpiar</a>
+    </div>
+    {% endif %}
+
+    {% if cursos %}
+    <div class="row">
+        {% for curso in cursos %}
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-gradient text-white" style="background: linear-gradient(45deg, #667eea, #764ba2);">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-calculator me-2"></i>
+                            {{ curso.nombrecurso }}
+                        </h5>
+                        <span class="badge bg-light text-dark">
+                            ID: {{ curso.idcurso }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Profesor -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-chalkboard-teacher text-primary me-2"></i>
+                            <strong>Profesor:</strong>
+                        </div>
+                        <div class="ms-4">
+                            <a href="{% url 'detalle_profesor' curso.idprofesor.idprofesor %}" 
+                               class="text-decoration-none">
+                                {{ curso.idprofesor.nombres }} {{ curso.idprofesor.apellidopaterno }} {{ curso.idprofesor.apellidomaterno }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Precio -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-dollar-sign text-success me-2"></i>
+                            <strong>Precio:</strong>
+                        </div>
+                        <div class="ms-4">
+                            <span class="h4 text-success">S/. {{ curso.precio }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Estado -->
+                    <div class="mb-3">
+                        {% if curso.iddisponibilidadcurso.disponibilidad %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>Disponible
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger">
+                                <i class="fas fa-times-circle me-1"></i>No Disponible
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'detalle_curso' curso.idcurso %}" 
+                           class="btn btn-outline-primary flex-fill">
+                            <i class="fas fa-eye me-1"></i>Ver Detalles
+                        </a>
+                        {% if curso.iddisponibilidadcurso.disponibilidad %}
+                            <a href="{% url 'crear_orden' %}?curso_id={{ curso.idcurso }}" 
+                               class="btn btn-custom flex-fill">
+                                <i class="fas fa-plus me-1"></i>Matricularme
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary flex-fill" disabled>
+                                <i class="fas fa-times me-1"></i>No Disponible
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination placeholder (for future implementation) -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <span class="page-link">Anterior</span>
+                </li>
+                <li class="page-item active">
+                    <span class="page-link">1</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Siguiente</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    {% else %}
+    <!-- No courses found -->
+    <div class="text-center py-5">
+        <i class="fas fa-search fa-4x text-muted mb-4"></i>
+        <h3>No se encontraron cursos</h3>
+        {% if search_query %}
+            <p class="text-muted mb-4">
+                No hay cursos que coincidan con tu búsqueda "{{ search_query }}"
+            </p>
+            <a href="{% url 'lista_cursos' %}" class="btn btn-primary">
+                <i class="fas fa-list me-2"></i>Ver todos los cursos
+            </a>
+        {% else %}
+            <p class="text-muted mb-4">
+                Actualmente no hay cursos disponibles
+            </p>
+            <a href="{% url 'home' %}" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>Volver al inicio
+            </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Quick Actions Section -->
+<section class="bg-light py-4">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'lista_profesores' %}" class="btn btn-outline-primary btn-lg w-100">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                    Ver Profesores
+                </a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'horarios_disponibles' %}" class="btn btn-outline-success btn-lg w-100">
+                    <i class="fas fa-clock me-2"></i>
+                    Ver Horarios
+                </a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'registro_estudiante' %}" class="btn btn-custom btn-lg w-100">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Registrarse
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

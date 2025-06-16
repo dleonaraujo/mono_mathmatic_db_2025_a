@@ -1,0 +1,244 @@
+{% extends 'app/base.html' %}
+
+{% block title %}{{ curso.nombrecurso }} - Academia de Matemática{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'lista_cursos' %}">Cursos</a></li>
+            <li class="breadcrumb-item active">{{ curso.nombrecurso }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Course Info -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-gradient text-white" style="background: linear-gradient(45deg, #667eea, #764ba2);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="h3 mb-0">
+                            <i class="fas fa-calculator me-2"></i>
+                            {{ curso.nombrecurso }}
+                        </h1>
+                        <span class="badge bg-light text-dark">
+                            ID: {{ curso.idcurso }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Status -->
+                    <div class="mb-4">
+                        {% if curso.iddisponibilidadcurso.disponibilidad %}
+                            <span class="badge bg-success fs-6">
+                                <i class="fas fa-check-circle me-1"></i>Curso Disponible
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger fs-6">
+                                <i class="fas fa-times-circle me-1"></i>Curso No Disponible
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Professor Info -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-chalkboard-teacher text-primary me-2"></i>Profesor</h5>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <a href="{% url 'detalle_profesor' curso.idprofesor.idprofesor %}" class="text-decoration-none">
+                                            {{ curso.idprofesor.nombres }} {{ curso.idprofesor.apellidopaterno }} {{ curso.idprofesor.apellidomaterno }}
+                                        </a>
+                                    </h6>
+                                    <p class="card-text">
+                                        <i class="fas fa-phone me-2"></i>{{ curso.idprofesor.telefonoprofesor }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-dollar-sign text-success me-2"></i>Precio</h5>
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h2 class="text-success mb-0">S/. {{ curso.precio }}</h2>
+                                    <small class="text-muted">Precio del curso completo</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Course Description -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-info-circle text-info me-2"></i>Descripción del Curso</h5>
+                        <div class="alert alert-info">
+                            <p class="mb-0">
+                                Este curso de <strong>{{ curso.nombrecurso }}</strong> está diseñado para proporcionar 
+                                una comprensión sólida de los conceptos fundamentales. Nuestro enfoque pedagógico 
+                                combina teoría y práctica para asegurar un aprendizaje efectivo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Course Features -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-star text-warning me-2"></i>Características del Curso</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Metodología práctica</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Material didáctico incluido</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Ejercicios personalizados</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Evaluaciones continuas</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Certificado de participación</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Asesoría personalizada</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Enrollment Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Matricularme</h5>
+                </div>
+                <div class="card-body text-center">
+                    {% if curso.iddisponibilidadcurso.disponibilidad %}
+                        <div class="mb-3">
+                            <h3 class="text-success">S/. {{ curso.precio }}</h3>
+                        </div>
+                        <a href="{% url 'crear_orden' %}?curso_id={{ curso.idcurso }}" 
+                           class="btn btn-custom btn-lg w-100 mb-2">
+                            <i class="fas fa-plus me-2"></i>Matricularme Ahora
+                        </a>
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Matrícula segura y rápida
+                        </small>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Este curso no está disponible actualmente
+                        </div>
+                        <button class="btn btn-secondary btn-lg w-100" disabled>
+                            <i class="fas fa-times me-2"></i>No Disponible
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Available Schedules -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Horarios Disponibles</h5>
+                </div>
+                <div class="card-body">
+                    {% if horarios %}
+                        {% for horario in horarios|slice:":5" %}
+                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                            <div>
+                                <strong>{{ horario.iddia.nombredia }}</strong><br>
+                                <small class="text-muted">
+                                    {{ horario.horainicio|time:"H:i" }} - {{ horario.horafin|time:"H:i" }}
+                                </small>
+                            </div>
+                            <span class="badge bg-success">Disponible</span>
+                        </div>
+                        {% endfor %}
+                        {% if horarios.count > 5 %}
+                        <div class="text-center mt-3">
+                            <a href="{% url 'horarios_disponibles' %}" class="btn btn-sm btn-outline-primary">
+                                Ver todos los horarios
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center text-muted">
+                            <i class="fas fa-calendar-times fa-2x mb-2"></i>
+                            <p>No hay horarios disponibles</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Available Classrooms -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-door-open me-2"></i>Salones Disponibles</h5>
+                </div>
+                <div class="card-body">
+                    {% if salones %}
+                        {% for salon in salones|slice:":3" %}
+                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                            <div>
+                                <strong>{{ salon.codigosalon }}</strong><br>
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i>Aforo: {{ salon.aforosalon }}
+                                </small>
+                            </div>
+                            <span class="badge bg-primary">Disponible</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted">
+                            <i class="fas fa-door-closed fa-2x mb-2"></i>
+                            <p>No hay salones disponibles</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Actions -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>¿Qué sigue?</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'lista_cursos' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-book me-2"></i>
+                                Ver otros cursos
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'detalle_profesor' curso.idprofesor.idprofesor %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-user-tie me-2"></i>
+                                Ver profesor
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'horarios_disponibles' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-calendar me-2"></i>
+                                Ver horarios
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'registro_estudiante' %}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-user-plus me-2"></i>
+                                Registrarme
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
